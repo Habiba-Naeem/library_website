@@ -1,0 +1,60 @@
+#mexbody .headingfont{
+    padding: 5%;
+    margin-top: -1%;
+    margin-left: -5%;
+    color:rgb(11, 11, 15);
+    background-color: transparent;
+}
+#mexol{
+    font-size: x-large;
+}
+
+
+#picforit{
+    height: 100px;
+    width: 50%;
+    border-radius: 50%;
+}
+
+.row{
+    padding: 2%;
+    text-align: center;
+    font-size: x-large;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: rgb(0, 0, 0);
+    
+}
+
+.text{
+    font-size: xx-large;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: black;
+}
+body>div{
+    background: rgba(155, 147, 147, 0.479);
+}
+.col{
+    text-align: center;
+}
+
+.mainheading{
+    font-family: fantasy;
+    text-align: center;
+}
+.indiv{
+    background-color: transparent;
+}
+.table{
+    padding: 0%;
+    text-align: center;
+    margin-left: 25%;
+    margin-top: 5%;
+    width: 50%;
+    background-color: rgba(95, 9, 9, 0.493);
+}
+
+h2{
+    margin-left: 20%;
+    
+}

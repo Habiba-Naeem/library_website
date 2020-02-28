@@ -1,0 +1,93 @@
+%commonbody{
+    padding: 0%;
+    margin: 0%;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover; 
+}
+
+%commontext{
+    color: blanchedalmond;
+    text-align: justify;
+}
+@media screen and (max-width: 992px) {
+    #indbody,#mexbody,#itbody,#index {
+      width: 60%;
+      .headingfont{
+          font-style: italic;
+      }
+    }
+  }
+  
+
+
+
+#mexbody .table{
+    margin-left: 5%;
+    background-color: rgba(0, 0, 0, 0.815);
+    font-size: 20px;
+    width: 40%;
+    @extend %commontext;
+}
+
+#mexdiv{
+    margin-left: 55%;
+    margin-top: -22%;
+    width: 30%;;
+    background-color: rgba(0, 0, 0, 0.815);
+    @extend %commontext;
+}
+#itdiv{
+    @extend %commontext;
+    background-color: rgba(41, 28, 28, 0.514);
+    margin-top: 5%;
+    margin-left: 15%;
+    width: 70%;
+    height: 100%;
+}
+
+.vl{
+    width: 0%;
+    border-left: 6px solid rgb(0, 0, 0);
+    height: 1000px;
+    position: absolute;
+    left: 50%;
+    margin-left: -10px;
+    top: 0;
+}
+.col-sm{
+    text-align: center;
+    font-size: xx-large;
+    @extend %commontext;
+}
+.headingfont{
+    @extend %commontext;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;  
+}
+
+.parafont{
+    @extend %commontext;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#index{
+    background: url(images/katie-smith-uQs1802D0CQ-unsplash\ res.jpg) ;
+    @extend %commonbody;
+    
+}
+#mexbody{
+    background: url(images/mexico-city-travel.adapt.1900.1.jpg);
+    @extend %commonbody;
+}
+
+#itbody{
+    background: url(images/italy.jpg);
+    @extend %commonbody;
+}
+
+#indbody{
+    background: url(images/jayakody-anthanas-hbP4HVMn-LM-unsplash\ res.jpg);
+    @extend %commonbody;
+}

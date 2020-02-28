@@ -1,0 +1,26 @@
+html{
+    height: 100%; 
+}
+div{
+    background-color: rgba(70, 55, 49, 0.459);
+    margin: 0.5%;
+    width: 30%;
+    margin-left: 5cm;    
+}
+.btn{
+    padding: 5px;
+    margin: 20px;
+    border: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: blanchedalmond;
+    background-color: rgb(85, 30, 30);
+}
+
+.divbutton{
+    margin-left: 20cm;
+    margin-top: -20.5cm;
+ }
+ #mexi, #it,#in{
+    height: 300px;
+    width: 100%;
+}
