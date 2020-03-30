@@ -1,0 +1,12 @@
+{% extends "layouts.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="indexcon">
+        <h1>Welcome to H's Library</h1>
+        <small>Login or register below to find the books of your choice!!</small>
+        <a class="nav-item nav-link" href="{{url_for('register')}}">Register</a>
+        <a class="nav-item nav-link" href="{{url_for('login')}}">Login</a>
+    </div>
+ </div>
+{% endblock %}

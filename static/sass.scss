@@ -1,0 +1,49 @@
+%common{
+    display: inline-block;
+    box-sizing: border-box;
+    border: none;
+}
+.Lnavbar-nav{
+    width: 50%;
+    box-sizing: border-box;
+    background-color: rebeccapurple;
+    position: relative;
+    border: 1px solid rosybrown;
+    input{
+        height: 35px;
+        margin: 0%;
+        width: 100%;
+        @extend %common;
+        padding: 2%;
+        color: rgb(168, 60, 60);
+    }
+    button{
+        @extend %common;
+        position: absolute;
+        height: 35px;
+        right: 0;
+        width: 15%;
+        background-color: rosybrown;
+        border-radius: 0rem;
+        color: white;
+    }
+}
+
+.indexcon{
+    h1{
+        padding-left: 8%;
+    }
+    small{
+        display: block;
+        margin-top: 3%;
+        padding-left: 15%;
+    }
+    a{
+        font-size: 30px;
+        @extend %common;
+        font-weight: 600;
+        margin-top: 5%;
+        margin-left: 15%;
+        color: brown;
+    }
+}

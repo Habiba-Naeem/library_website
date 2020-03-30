@@ -1,0 +1,40 @@
+.Lnavbar-nav input, .Lnavbar-nav button, .indexcon a {
+  display: inline-block;
+  box-sizing: border-box;
+  border: none; }
+
+.Lnavbar-nav {
+  width: 50%;
+  box-sizing: border-box;
+  background-color: rebeccapurple;
+  position: relative;
+  border: 1px solid rosybrown; }
+  .Lnavbar-nav input {
+    height: 35px;
+    margin: 0%;
+    width: 100%;
+    padding: 2%;
+    color: #a83c3c; }
+  .Lnavbar-nav button {
+    position: absolute;
+    height: 35px;
+    right: 0;
+    width: 15%;
+    background-color: rosybrown;
+    border-radius: 0rem;
+    color: white; }
+
+.indexcon h1 {
+  padding-left: 8%; }
+.indexcon small {
+  display: block;
+  margin-top: 3%;
+  padding-left: 15%; }
+.indexcon a {
+  font-size: 30px;
+  font-weight: 600;
+  margin-top: 5%;
+  margin-left: 15%;
+  color: brown; }
+
+/*# sourceMappingURL=sass.css.map */

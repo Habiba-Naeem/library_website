@@ -1,0 +1,32 @@
+{% extends "layouts.html" %}
+
+{% block book %}
+<section class="forbooks">
+  <div class="bookcontainer">
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">ISBN #</th>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Year</th>
+            <th></th>
+            <th scope="col">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for book in books %}
+                <tr>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.year }}</td>
+                    <td></td>
+                    <td>k</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
+</section>
+{% endblock %}

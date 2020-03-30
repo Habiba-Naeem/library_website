@@ -1,0 +1,50 @@
+html,body{
+  padding: 0%;
+  margin: 0%;
+}
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 228, 228);
+}
+.bg-steel{
+  background-color: brown;
+}
+.nav-link{
+  display: inline-block;
+  border: none;
+  color: rgb(255, 255, 255);
+}
+.nav-link:hover{
+  color: rgb(105, 0, 35);
+}
+section{
+  position: relative;
+  top: 5pc;
+  background-color: rgb(253, 191, 191);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding-top: 5%;
+  width: 40%;
+  padding-bottom: 5%;
+  border-radius: 0.2rem;
+}
+.btn.btn-primary{
+  width: 100%;
+  background-color: lightcoral;
+  outline: none;
+}
+.btn.btn-primary:hover, .btn.btn-primary:active{
+  background-color: brown;
+}
+.forbooks{
+  width: 100%;
+  position: relative;
+  right: 15%;
+  box-sizing: border-box;
+  padding: 0%;
+  border-radius: 0.2rem;
+}
