@@ -37,4 +37,61 @@
   margin-left: 15%;
   color: brown; }
 
+.col {
+  margin-top: 2%; }
+  .col:hover {
+    cursor: pointer; }
+  .col h3 {
+    border-bottom: 1px solid #ec5959;
+    position: relative;
+    left: 0%; }
+  .col h6 {
+    font-weight: lighter;
+    display: inline-block;
+    margin-right: 1%;
+    position: relative;
+    left: 0%; }
+  .col #isbn {
+    position: absolute;
+    left: 80%; }
+  .col button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    outline: inherit; }
+  .col input[type=text] {
+    visibility: hidden;
+    display: none; }
+  .col a {
+    color: inherit;
+    /* blue colors for links too */
+    text-decoration: inherit; }
+
+.form-group {
+  margin-top: 5%; }
+
+.border-bottom {
+  border-bottom: 1px solid #959a9e !important;
+  font-size: 20px; }
+
+.left-container {
+  display: inline-block;
+  position: relative;
+  bottom: 9pc; }
+
+.right-container {
+  display: inline-block;
+  margin-left: 5%;
+  width: 50%; }
+  .right-container input[type=number] {
+    width: 30%; }
+  .right-container button[type=submit] {
+    width: 30%; }
+
 /*# sourceMappingURL=sass.css.map */

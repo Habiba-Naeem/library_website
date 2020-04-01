@@ -1,5 +1,6 @@
 import os
-
+import requests
+import json
 from flask import Flask, session, render_template, request, url_for, redirect, flash
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -36,7 +37,7 @@ def index():
     
     #if a user is logged in then redirect to the books page
     else:
-        return redirect(url_for('books', books = "books"))
+        return redirect(url_for('books'))
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -50,7 +51,7 @@ def login():
         password = request.form.get("password")
 
         #check if all fields are filled
-        if email == "" or password == "" :
+        if email == None or password == None :
             flash("Please fill all fields.", "danger")
         else:
             #select data
@@ -64,14 +65,19 @@ def login():
             #remember the user
             session["id"] = data.id
             session["username"] = data.username
-            return render_template("books.html", books = "books", username = session["username"])
+            return redirect(url_for('books'))
     #if request is get
     return render_template("login.html", login = "login")
 
+
+
 @app.route("/logout")
 def logout():
+    #forget user
     session.clear()
     return redirect(url_for('index'))
+
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -85,14 +91,14 @@ def register():
         
         #if any field is null
         if username == "" or email == "" or password == "" or confirm == "":
-             return redirect(url_for('register', register = "register", message = "Please fill all fields."))
+            flash("Please fill all fields.", "danger")
         
         #loop through the fetched data
         for select in data:
 
             #match username and email
             if select.username == username or select.email == email:
-                return redirect(url_for('register', register = "register", message = "Username or E-mail alreay exists. Please enter a different username or E-mail "))
+                flash("Username or E-mail alreay exists. Please enter a different username or E-mail.", "danger")
             
             
             else:
@@ -104,12 +110,14 @@ def register():
                                                                                         "email": email,
                                                                                         "password": password})
                     db.commit()
-                    
+                    session["username"] = username
+                    print(f"{username}")
                     #take to books.html and render the list of books
-                    return redirect(url_for('books', username = username))
+                    return redirect(url_for('books'))
                 
                 else:
-                    return redirect(url_for('register', register = "register", message = "Passwords do not match"))
+                    flash("Passwords do not match", "danger")
+                    #return redirect(url_for('register'))
     
     #if get request; do following
     else:    
@@ -119,23 +127,61 @@ def register():
 
 @app.route("/books", methods=["GET", "POST"])
 def books():
+    #display all the books
     books = db.execute("SELECT * FROM books").fetchall()
-    return render_template("books.html", books = books )
-    #if request.method == "POST":
-        #search = request.form.get("searchbar")
-        #print(f"{search}")
-        #if search == "":
-        #    return render_template("books.html", books = books )
-        #books = db.execute("SELECT * FROM books WHERE isbn LIKE :isbn OR title LIKE :title OR author LIKE :author ", 
-        #                                                                               {"isbn":search},
-        #                                                                               {"title":search},
-        #                                                                                {"author":search}).fetchall()
-        #return render_template("books.html", books = books )
-        #isbn = db.execute("SELECT isbn FROM books WHERE isbn = :isbn ", {"isbn":search}).fetchall()
-        #title = db.execute("SELECT title FROM books WHERE title = :title ", {"title":search}).fetchall()
-        #author = db.execute("SELECT author FROM books WHERE author = :author ", {"author":search}).fetchall()
+    username =  session.get('username')
+    print(f"{username}")
 
+    if username == None:
+        return redirect(url_for('index'))
+
+    if request.method == "POST":
+        #search for text in the searchbar
+        search = request.form.get("searchbar")
+        print(f"{search}")
+
+        #redirect to books if searchbar is empty
+        if search == "":
+            return redirect(url_for("books"))
+        
+        #select and display data 
+        else:
+            books = db.execute("SELECT * FROM books WHERE isbn LIKE '%"+search+"%' OR title LIKE '%"+search+"%' OR author LIKE '%"+search+"%'")
+            if books ==  None:
+                flash("Sorry. The book you searched for does not exist.", "info")
+            return render_template("books.html", books = books, username = username )
     
+    #if request is get
+    return render_template("books.html", books = books, username = username)
+
+
+@app.route("/bookpage/<string:isbn>", methods=["GET", "POST"])
+def bookpage(isbn):
+
+    username =  session.get('username')
+    print(f"{username}")
+    if username == None:
+        return redirect(url_for('index'))
+
+    print(f"{isbn}")
+    
+    #select data on the basis of isbn from books.html
+    data = db.execute("SELECT * FROM books WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
+    if data == None:
+        redirect(url_for('books'))
+    
+    #make api request
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ydcqyr9QO7Uj623vRgYS5A", "isbns": isbn})
+    api=res.json()
+
+    #average and total ratings given to a book
+    average_rating = res.json()['books'][0]['average_rating']
+    work_ratings_count = res.json()['books'][0]['work_ratings_count'] 
+
+    return render_template("bookpage.html",books = "c", data = data, average_rating = average_rating , work_ratings_count = work_ratings_count)
+
+
+
 
 
 if __name__ == '__main__':
