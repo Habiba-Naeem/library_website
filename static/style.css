@@ -23,10 +23,10 @@ section{
   position: relative;
   top: 5pc;
   background-color: rgb(253, 191, 191);
-  display: flex;
+  /*display: flex;
   justify-content: center;
   align-items: center;
-  box-sizing: border-box;
+  */box-sizing: border-box;
   padding-top: 2%;
   width: 40%;
   padding-bottom: 1%;
@@ -37,8 +37,9 @@ section{
   background-color: lightcoral;
   outline: none;
 }
-.btn.btn-primary:hover, .btn.btn-primary:active{
-  background-color: brown;
+.btn.btn-primary:hover, .btn.btn-primary:active, .btn .btn-primary:visited{
+  outline: none ;
+  background-color: brown !important;
 }
 .forbooks{
   width: 60%;

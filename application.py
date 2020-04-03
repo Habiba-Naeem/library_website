@@ -1,7 +1,7 @@
 import os
 import requests
 import json
-from flask import Flask, session, render_template, request, url_for, redirect, flash
+from flask import Flask, session, render_template, request, url_for, redirect, flash, jsonify, abort
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -81,30 +81,52 @@ def logout():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    username = request.form.get("username")
+    email =  request.form.get("email")
+    password = request.form.get("password")
+    confirm = request.form.get("confirm-password")
+    data = db.execute("SELECT username, email FROM users WHERE username = :username AND email = :email",
+                                                                                            {"username":username,
+                                                                                            "email":email} ).fetchone()
+    if request.method == "POST":
+        
+        if password != confirm:
+            flash("Passwords do not match", "danger")
+        
+        if username == "" or email == "" or password == "" or confirm == "":
+             flash("Please fill all fields", "danger")
+
+        if data != None:
+             flash("Username or email already exists", "danger")
+
+        if data == None and password == confirm:
+            db.execute("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)", 
+                                                                                        {"username": username,
+                                                                                        "email": email,
+                                                                                        "password": password})
+            db.commit()
+            session["username"] = username
+            print(f"{username}")
+            id = db.execute("SELECT id FROM users WHERE username = :username", {"username":username})
+            session["id"] = id
+            #take to books.html and render the list of books
+            return redirect(url_for('books'))
+
+        return redirect(url_for('register'))
+    
+    return render_template("register.html", register = "register")
+    """print(f"{data}, {data}")
     #Post request
     if request.method == "POST":
-        username = request.form.get("username")
-        email =  request.form.get("email")
-        password = request.form.get("password")
-        confirm = request.form.get("confirm-password")
-        data = db.execute("SELECT username, email FROM users").fetchall()
         
         #if any field is null
         if username == "" or email == "" or password == "" or confirm == "":
             flash("Please fill all fields.", "danger")
-        
-        #loop through the fetched data
-        for select in data:
+            return redirect(url_for('register'))
 
-            #match username and email
-            if select.username == username or select.email == email:
-                flash("Username or E-mail alreay exists. Please enter a different username or E-mail.", "danger")
-            
-            
-            else:
-
-                #match the passwords
-                if password == confirm:
+        if data == None:
+            print("heloo")
+            if password == confirm:
                     db.execute("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)", 
                                                                                         {"username": username,
                                                                                         "email": email,
@@ -112,16 +134,17 @@ def register():
                     db.commit()
                     session["username"] = username
                     print(f"{username}")
+                    id = db.execute("SELECT id FROM users WHERE username = :username", {"username":username})
+                    session["id"] = id
                     #take to books.html and render the list of books
                     return redirect(url_for('books'))
-                
-                else:
-                    flash("Passwords do not match", "danger")
-                    #return redirect(url_for('register'))
-    
-    #if get request; do following
-    else:    
-        return render_template("register.html", register = "register")
+            else:
+                flash("Passwords do not match", "danger")
+        else:
+            flash("Username or E-mail alreay exists. Please enter a different username or E-mail.", "danger")
+            return redirect(url_for('register'))
+    elif request.method == "GET":
+        return render_template("register.html", register = "register")"""
 
 
 
@@ -131,7 +154,7 @@ def books():
     books = db.execute("SELECT * FROM books").fetchall()
     username =  session.get('username')
     print(f"{username}")
-
+    
     if username == None:
         return redirect(url_for('index'))
 
@@ -159,7 +182,8 @@ def books():
 def bookpage(isbn):
 
     username =  session.get('username')
-    print(f"{username}")
+    id = session.get('id')
+    print(f"{username}, {id}")
     if username == None:
         return redirect(url_for('index'))
 
@@ -178,11 +202,77 @@ def bookpage(isbn):
     average_rating = res.json()['books'][0]['average_rating']
     work_ratings_count = res.json()['books'][0]['work_ratings_count'] 
 
-    return render_template("bookpage.html",books = "c", data = data, average_rating = average_rating , work_ratings_count = work_ratings_count)
+    #display reviews and ratings.
+    display = db.execute("SELECT * FROM reviews WHERE isbn = :isbn ", {"isbn":isbn}).fetchall()
+
+    
+    review = request.form.get("review")
+    rating = request.form.get("rating")
+    print(f"{review},{rating}")
+
+    #if user tries to submit review and rating
+    if request.method == "POST":
+       
+        reviews = db.execute("SELECT id, username FROM reviews WHERE isbn = :isbn AND id = :id AND username = :username", 
+                                                {"isbn":isbn, 
+                                                "id":id,
+                                                "username":username}).fetchone()
+        if reviews == None:
+            db.execute("INSERT INTO reviews ( review, rating, id, isbn, username ) VALUES ( :review, :rating, :id, :isbn, :username)", {
+                                                                                "review":review,    
+                                                                                "rating":rating,                                                                            "rating":rating,
+                                                                                "id":id,
+                                                                                "isbn":isbn,
+                                                                                "username":username})
+            print("worked")
+            db.commit()
+            return redirect(url_for('bookpage', isbn = isbn))
+            
+        elif reviews.id != id:
+            db.execute("INSERT INTO reviews ( review, rating, id, isbn, username ) VALUES ( :review, :rating, :id, :isbn, :username)", {
+                                                                                "review":review,    
+                                                                                "rating":rating,                                                                            "rating":rating,
+                                                                                "id":id,
+                                                                                "isbn":isbn,
+                                                                                "username":username
+                                                                                })
+            print("worked")
+            db.commit()
+            return redirect(url_for('bookpage', isbn = isbn))
+                           
+        else:
+            flash("You have already given the review for this book", "danger")
+
+    #if get request
+    return render_template("bookpage.html",books = "c", data = data, average_rating = average_rating , 
+                            work_ratings_count = work_ratings_count,display = display,  username = username)
 
 
 
 
+@app.route("/api/<isbn>")
+def api(isbn):
+
+    data = db.execute("SELECT * FROM books WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
+    if data == None:
+        abort(404)
+    
+    #make api request
+    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ydcqyr9QO7Uj623vRgYS5A", "isbns": isbn})
+    api=res.json()
+
+    #average and total ratings given to a book
+    average_rating = res.json()['books'][0]['average_rating']
+    work_ratings_count = res.json()['books'][0]['work_ratings_count'] 
+
+    return jsonify({
+        "title": data.title,
+        "author": data.author,
+        "year": data.year,
+        "isbn": data.isbn,
+        "review_count": work_ratings_count,
+        "average_score": average_rating
+    })
 
 if __name__ == '__main__':
     app.run(debug=True)

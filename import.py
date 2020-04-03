@@ -17,24 +17,34 @@ engine = create_engine(os.getenv("DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 def main():
-    db.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR NOT NULL UNIQUE, email VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL)")
-    print("user table")
-    db.execute("CREATE TABLE reviews (review VARCHAR NOT NULL, rating INTEGER NOT NULL, isbn VARCHAR NOT NULL, user_id INTEGER NOT NULL)")
+    #db.execute("CREATE TABLE users (id SERIAL PRIMARY KEY, username VARCHAR NOT NULL UNIQUE, email VARCHAR NOT NULL UNIQUE, password VARCHAR NOT NULL)")
+    #print("user table")
+    db.execute("CREATE TABLE reviews (review VARCHAR NOT NULL, rating INTEGER NOT NULL, isbn VARCHAR NOT NULL, id INTEGER NOT NULL, username VARCHAR NOT NULL)")
     print("review table")
-    db.execute("CREATE TABLE books (isbn VARCHAR PRIMARY KEY, title VARCHAR NOT NULL, author VARCHAR NOT NULL, year VARCHAR NOT NULL)")
-    f=open("books.csv")
-    reader =csv.reader(f)
-    for isbn, title, author, year in reader:
-        if year == "year":
-            print('skipped first line')
-        else:    
-            db.execute("INSERT INTO books (isbn, title, author, year) VALUES (:isbn,:title,:author,:year)",
-                                                                                {"isbn":isbn,
-                                                                                "title":title,
-                                                                                "author":author,
-                                                                                "year":year})
-        print(f"Added: {title}")
-        
+    #books = db.execute("SELECT * FROM books").fetchall()
+#    for book in books:
+#            isbn = book.isbn
+#        db.execute("UPDATE reviews set isbn = :isbn",  {"isbn":isbn})
+#            print(f"{book.isbn}")
+#            db.commit()
+    #db.execute("CREATE TABLE books (isbn VARCHAR PRIMARY KEY, title VARCHAR NOT NULL, author VARCHAR NOT NULL, year VARCHAR NOT NULL)")
+    #f=open("books.csv")
+    #reader =csv.reader(f)
+    #for isbn, title, author, year in reader:
+    #    if year == "year":
+    #        print('skipped first line')
+    #    else:    
+    #       db.execute("INSERT INTO books (isbn, title, author, year) VALUES (:isbn,:title,:author,:year)",
+    #                                                                            {"isbn":isbn,
+    #                                                                            "title":title,
+    #                                                                            "author":author,
+    #                                                                            "year":year})
+    #    print(f"Added: {title}")
+    """
+    r=db.execute("SELECT * FROM reviews").fetchall()
+    for rs in r:
+        print(f"{rs.isbn}") """
+    
     print("done")            
     db.commit()    
 if __name__ == "__main__":

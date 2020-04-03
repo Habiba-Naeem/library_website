@@ -7,7 +7,7 @@
     <h6>Year:{{ data.year }}</h6>
     <h6>ISBN#: {{ data.isbn }}</h6>
     <fieldset  class="form-group">
-        <legend class="border-bottom mb-4">Ratings</legend>
+        <legend class="border-bottom mb-4">Ratings and reviews</legend>
         <div class="left-container">
             <small>Total number of ratings: {{ work_ratings_count }}</small>
             <h3>GoodRead's rating: {{ average_rating }}</h3>
@@ -20,11 +20,33 @@
                 </div>
                 <div class="form-group" style="display:inline-block;">
                     <label for="Rate">Rate</label>
-                    <input type="number" class="form-control" id="Rate" name="rate">
+                    <input type="number" class="form-control" id="Rate" name="rating"  min="1" max="5">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
+    </fieldset>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+</div>
+<div class="d-container">
+    <fieldset  class="form-group">
+        <legend class="border-bottom mb-4">Community rating and reviews</legend>
+        {% for review in display %}    
+            <div class="form-group">
+                <blockquote class="blockquote">
+                     <p class="mb-0">{{ review.rating }} <br> {{ review.review}}.</p>
+                </blockquote>
+                <small class="text-muted"><i>{{ review.username }}</i></small>
+            </div>
+        {% endfor %}
     </fieldset>
 </div>
 {% endblock %}

@@ -86,12 +86,34 @@
   bottom: 9pc; }
 
 .right-container {
+  /*display: inline-block;
+  margin-left: 5%;
+  width: 50%;*/
   display: inline-block;
   margin-left: 5%;
-  width: 50%; }
+  width: 50%;
+  position: relative;
+  left: 5%;
+  background-color: #fdd0e9;
+  bottom: 1pc;
+  border-radius: 0.2rem;
+  padding-left: 1%;
+  padding-right: 1%; }
   .right-container input[type=number] {
-    width: 30%; }
+    width: 70%; }
   .right-container button[type=submit] {
     width: 30%; }
+
+fieldset {
+  margin-top: 0% !important;
+  margin-bottom: 0% !important; }
+
+.d-container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  background-color: #fdd0e9; }
 
 /*# sourceMappingURL=sass.css.map */
