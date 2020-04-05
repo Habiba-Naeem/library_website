@@ -135,7 +135,7 @@ def register():
             db.commit()
             session["username"] = username
             print(f"{username}")
-            id = db.execute("SELECT id FROM users WHERE username = :username", {"username":username})
+            id = db.execute("SELECT id FROM users WHERE username = :username", {"username":username}).fetchone()
             session["id"] = id
             #take to books.html and render the list of books
             return redirect(url_for('books'))
