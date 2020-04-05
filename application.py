@@ -69,16 +69,6 @@ def login():
     #if request is get
     return render_template("login.html", login = "login")
 
-
-
-@app.route("/logout")
-def logout():
-    #forget user
-    session.clear()
-    return redirect(url_for('index'))
-
-
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     username = request.form.get("username")
@@ -86,18 +76,18 @@ def register():
     password = request.form.get("password")
     confirm = request.form.get("confirm-password")
     data = db.execute("SELECT username, email FROM users WHERE username = :username AND email = :email",
-                                                                                            {"username":username,
-                                                                                            "email":email} ).fetchone()
+                                                                              {"username":username,
+                                                                                "email":email} ).fetchone()
     if request.method == "POST":
-        
+
         if password != confirm:
             flash("Passwords do not match", "danger")
-        
+
         if username == "" or email == "" or password == "" or confirm == "":
-             flash("Please fill all fields", "danger")
+            flash("Please fill all fields", "danger")
 
         if data != None:
-             flash("Username or email already exists", "danger")
+            flash("Username or email already exists", "danger")
 
         if data == None and password == confirm:
             db.execute("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)", 
@@ -113,7 +103,53 @@ def register():
             return redirect(url_for('books'))
 
         return redirect(url_for('register'))
-    
+
+    return render_template("register.html", register = "register")
+
+
+@app.route("/logout")
+def logout():
+    #forget user
+    session.clear()
+    return redirect(url_for('index'))
+
+
+
+ @app.route("/register", methods=["GET", "POST"])
+ def register():
+    username = request.form.get("username")
+    email =  request.form.get("email")
+    password = request.form.get("password")
+    confirm = request.form.get("confirm-password")
+    data = db.execute("SELECT username, email FROM users WHERE username = :username AND email = :email",
+                                                               {"username":username,
+                                                                "email":email} ).fetchone()
+    if request.method == "POST":
+         
+        if password != confirm:
+            flash("Passwords do not match", "danger")
+         
+        if username == "" or email == "" or password == "" or confirm == "":
+            flash("Please fill all fields", "danger")
+
+        if data != None:
+            flash("Username or email already exists", "danger")
+
+        if data == None and password == confirm:
+            db.execute("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)", 
+                                                          {"username": username,
+                                                                                                        "email": email,
+                                                                                                        "password": password})
+            db.commit()
+            session["username"] = username
+            print(f"{username}")
+            id = db.execute("SELECT id FROM users WHERE username = :username", {"username":username})
+            session["id"] = id
+            #take to books.html and render the list of books
+            return redirect(url_for('books'))
+
+        return redirect(url_for('register'))
+
     return render_template("register.html", register = "register")
     """print(f"{data}, {data}")
     #Post request
@@ -145,6 +181,7 @@ def register():
             return redirect(url_for('register'))
     elif request.method == "GET":
         return render_template("register.html", register = "register")"""
+
 
 
 
