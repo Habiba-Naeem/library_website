@@ -182,9 +182,6 @@ def logout():
     elif request.method == "GET":
         return render_template("register.html", register = "register")"""
 
-
-
-
 @app.route("/books", methods=["GET", "POST"])
 def books():
     #display all the books
@@ -283,9 +280,6 @@ def bookpage(isbn):
     #if get request
     return render_template("bookpage.html",books = "c", data = data, average_rating = average_rating , 
                             work_ratings_count = work_ratings_count,display = display,  username = username)
-
-
-
 
 @app.route("/api/<isbn>")
 def api(isbn):
