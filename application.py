@@ -45,7 +45,7 @@ def login():
     # Forget any user
     session.clear()
 
-    #
+    #if submit button
     if request.method == "POST":
         email =  request.form.get("email")
         password = request.form.get("password")
@@ -53,6 +53,7 @@ def login():
         #check if all fields are filled
         if email == None or password == None :
             flash("Please fill all fields.", "danger")
+        
         else:
             #select data
             data = db.execute("SELECT * FROM users WHERE email = :email AND password = :password", 
@@ -61,6 +62,7 @@ def login():
         #if nothing is selected from the database
         if data == None:
             flash("Email or password is not correct.", "danger")
+        
         else:
             #remember the user
             session["id"] = data.id
@@ -136,13 +138,16 @@ def register():
             session["username"] = username
             print(f"{username}")
             id = db.execute("SELECT id FROM users WHERE username = :username", {"username":username}).fetchone()
-            session["id"] = id
+            session["id"] = id[0]
+            print(f"{id}")
             #take to books.html and render the list of books
             return redirect(url_for('books'))
 
         return redirect(url_for('register'))
 
     return render_template("register.html", register = "register")
+
+
 @app.route("/bookpage/<string:isbn>", methods=["GET", "POST"])
 def bookpage(isbn):
 
@@ -211,6 +216,7 @@ def bookpage(isbn):
     #if get request
     return render_template("bookpage.html",books = "c", data = data, average_rating = average_rating , 
                             work_ratings_count = work_ratings_count,display = display,  username = username)
+
 
 @app.route("/api/<isbn>")
 def api(isbn):
