@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+from decimal import Decimal
 from flask import Flask, session, render_template, request, url_for, redirect, flash, jsonify, abort
 from flask_session import Session
 from sqlalchemy import create_engine
@@ -224,22 +225,26 @@ def api(isbn):
     data = db.execute("SELECT * FROM books WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
     if data == None:
         abort(404)
+
+    review_count = db.execute("SELECT COUNT(review) FROM reviews WHERE isbn = :isbn",{"isbn":isbn}).fetchone()
+    rating = db.execute("SELECT rating FROM reviews WHERE isbn = :isbn",{"isbn":isbn}).fetchall()  
     
-    #make api request
-    res = requests.get("https://www.goodreads.com/book/review_counts.json", params={"key": "Ydcqyr9QO7Uj623vRgYS5A", "isbns": isbn})
-    api=res.json()
+    avg_rating = 0 
 
-    #average and total ratings given to a book
-    average_rating = res.json()['books'][0]['average_rating']
-    work_ratings_count = res.json()['books'][0]['work_ratings_count'] 
+    for rate in rating:
+        print(f"{rate[0]}")
+        avg_rating = rate[0] + avg_rating
 
+    avg_rating = avg_rating/review_count[0]
+    print(f"{review_count[0]}, {avg_rating}")
+   
     return jsonify({
         "title": data.title,
         "author": data.author,
         "year": data.year,
         "isbn": data.isbn,
-        "review_count": work_ratings_count,
-        "average_score": average_rating
+        "review_count": review_count[0],
+        "average_score": avg_rating
     })
 
 if __name__ == '__main__':
